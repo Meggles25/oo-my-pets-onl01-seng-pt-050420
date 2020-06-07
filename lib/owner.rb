@@ -17,45 +17,47 @@ class Owner
     "I am a #{self.species}."
   end
   
-  def buy_cat(cat_name)
-    cat = Cat.new(cat_name)
-    self.pets[:cats] << cat
+  def buy_cat(name)
+    Cat.new(name, self)
   end
 
-  def buy_dog(dog_name)
-    dog = Dog.new(dog_name)
-    self.pets[:dogs] << dog
+  def buy_dog(name)
+    Dog.new(name, self)
   end
 
   def walk_dogs
-    self.pets[:dogs].each {|dog| dog.mood = "happy"}
+    self.dogs.each {|dog| dog.mood = "happy"}
   end
 
   def play_with_cats
-    self.pets[:cats].each {|cat| cat.mood = "happy"}
+    self.cats.each {|cat| cat.mood = "happy"}
   end
 
   def sell_pets
-    self.pets.each do |species, animals|
-      animals.each do |animal|
-        animal.mood = "nervous"
-      end
-      animal.clear
+    self.cats.each do |cat|
+      self.cats.delete(cat)  
+      cat.owner = nil 
+      cat.mood = "nervous"
+    end
+  
+    self.dogs.each do |dog|
+      self.dogs.delete(dog)
+      dog.owner = nil 
+      dog.mood = "nervous"
     end
   end  
 
   def list_pets
-    "I have #{@pets[:dogs].count} dog(s), and #{@pets[:cats].count} cat(s)."
+    number_of_dogs = self.dogs.count
+    number_of_cats = self.cats.count
+    
+    "I have #{number_of_dogs} dog(s), and #{number_of_cats} cat(s)."
   end
 
   def self.all
     @@all
   end
-
-  def self.reset_all
-    @@all.clear
-  end
-
+  
   def self.count
     self.all.length
   end
